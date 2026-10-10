@@ -6,12 +6,17 @@
 # Original Plymouth script example: /usr/share/plymouth/themes/script/script.script
 
 # Stargate SG-1 Plymouth Theme
-# Black background, centered stargate, spinning chevron animation
+# Black background, centered stargate with chevron activation animation
 
 Window.SetBackgroundTopColor(0.0, 0.0, 0.0);
 Window.SetBackgroundBottomColor(0.0, 0.0, 0.0);
 
-# --- Stargate (logo + spinner) ---
+# Timing: refresh runs at ~50Hz (1 tick = 20ms)
+# 1 second per frame = 50 ticks per frame
+frameTicks = 50;
+frameCount = 9;
+
+# --- Stargate ---
 stargate.image = Image("stargate_0.png");
 stargate.x = Window.GetWidth() / 2 - stargate.image.GetWidth() / 2;
 stargate.y = Window.GetHeight() * 0.35 - stargate.image.GetHeight() / 2;
@@ -19,20 +24,22 @@ stargate.y = Window.GetHeight() * 0.35 - stargate.image.GetHeight() / 2;
 if (Plymouth.GetMode() == "boot")
 {
     stargate.tick = 0;
-    stargate.frameCount = 9;
+    stargate.frame = 0;
+    stargate.done = 0;
+
     stargate.sprite = Sprite(stargate.image);
     stargate.sprite.SetPosition(stargate.x, stargate.y, 0);
 }
 else
 {
-    # Lock screen: pulsating stargate
-    stargate.image = Image("stargate_8.png");
-    stargate.minOpacity = 0.3;
-    stargate.opacityAngle = 0.0;
-}
+    # Lock screen: start from unlit, will activate then pulsate
+    stargate.tick = 0;
+    stargate.frame = 0;
+    stargate.done = 0;
 
-stargate.sprite = Sprite(stargate.image);
-stargate.sprite.SetPosition(stargate.x, stargate.y, 0);
+    stargate.sprite = Sprite(stargate.image);
+    stargate.sprite.SetPosition(stargate.x, stargate.y, 0);
+}
 
 # --- Refresh ---
 fun refresh()
@@ -41,9 +48,32 @@ fun refresh()
     {
         if (status == "normal")
         {
-            frameNo = (stargate.tick++ / 5) % stargate.frameCount;
-            stargate.sprite.SetImage(Image("stargate_" + frameNo + ".png"));
-            stargate.sprite.SetOpacity(1);
+            if (!stargate.done)
+            {
+                stargate.tick++;
+                if (stargate.tick >= frameTicks)
+                {
+                    stargate.tick = 0;
+                    stargate.frame++;
+                    if (stargate.frame >= frameCount)
+                    {
+                        stargate.done = 1;
+                        stargate.opacityAngle = 0;
+                    }
+                    else
+                        stargate.sprite.SetImage(Image("stargate_" + stargate.frame + ".png"));
+                }
+            }
+            else
+            {
+                # Pulsate endlessly after activation
+                stargate.opacityAngle += ((2 * 3.14) / 50) * 0.5;
+                minOpacity = 0.3;
+                opacity = (Math.Cos(stargate.opacityAngle) + 1) / 2;
+                opacity *= 1 - minOpacity;
+                opacity += minOpacity;
+                stargate.sprite.SetOpacity(opacity);
+            }
         }
         else
         {
@@ -52,12 +82,37 @@ fun refresh()
     }
     else
     {
-        # Lock screen: pulsating stargate
-        stargate.opacityAngle += ((2 * 3.14) / 50) * 0.5;
-        opacity = (Math.Cos(stargate.opacityAngle) + 1) / 2;
-        opacity *= 1 - stargate.minOpacity;
-        opacity += stargate.minOpacity;
-        stargate.sprite.SetOpacity(opacity);
+        # Lock screen
+        if (status == "normal")
+        {
+            if (!stargate.done)
+            {
+                stargate.tick++;
+                if (stargate.tick >= frameTicks)
+                {
+                    stargate.tick = 0;
+                    stargate.frame++;
+                    if (stargate.frame >= frameCount)
+                        stargate.done = 1;
+                    else
+                        stargate.sprite.SetImage(Image("stargate_" + stargate.frame + ".png"));
+                }
+            }
+            else
+            {
+                # Pulsate endlessly on last frame
+                stargate.opacityAngle += ((2 * 3.14) / 50) * 0.5;
+                minOpacity = 0.3;
+                opacity = (Math.Cos(stargate.opacityAngle) + 1) / 2;
+                opacity *= 1 - minOpacity;
+                opacity += minOpacity;
+                stargate.sprite.SetOpacity(opacity);
+            }
+        }
+        else
+        {
+            stargate.sprite.SetOpacity(0);
+        }
     }
 }
 
@@ -65,6 +120,16 @@ Plymouth.SetRefreshFunction(refresh);
 
 # --- Dialog (password / disk encryption) ---
 status = "normal";
+
+fun display_normal_callback()
+{
+    global.status = "normal";
+    # After password entered: show stargate_1.png
+    stargate.sprite.SetImage(Image("stargate_1.png"));
+    stargate.sprite.SetOpacity(1);
+    if (global.dialog)
+        dialog_opacity(0);
+}
 
 fun dialog_setup()
 {
@@ -100,13 +165,6 @@ fun dialog_opacity(opacity)
     {
         dialog.bullet[index].sprite.SetOpacity(opacity);
     }
-}
-
-fun display_normal_callback()
-{
-    global.status = "normal";
-    if (global.dialog)
-        dialog_opacity(0);
 }
 
 fun display_password_callback(prompt, bullets)
