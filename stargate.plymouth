@@ -1,6 +1,6 @@
 [Plymouth Theme]
 Name=Stargate SG-1
-Description=Stargate SG-1 themed boot splash with spinning chevron animation
+Description=Stargate SG-1 themed boot splash with 7-chevron dialing animation
 ModuleName=script
 
 [script]

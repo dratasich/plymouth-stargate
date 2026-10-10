@@ -6,6 +6,7 @@ Stargate SG-1 Plymouth boot splash theme.
 
 - Style: technical drawing and/or futuristic comic style.
 - 7 chevrons light one after another. Last chevron is at the top.
+  The order is according to [stargatewiki: dialing computer](https://en.stargatewiki.noip.me/images/1/19/Dialing_computer_%28Unending%29.jpg)
 
 ## Structure
 
@@ -16,6 +17,27 @@ images/
   logo.png                 # Stargate SG-1 logo
   spinner-0.png .. 11.png  # 12-frame chevron spinner
   box.png, lock.png, entry.png, bullet.png  # dialog assets
+```
+
+## Colors
+
+- See `images-src/stargate.svg`
+- box 1px `808080ff`
+
+## Install
+
+```bash
+sudo cp -r . /usr/share/plymouth/themes/stargate
+sudo plymouth-set-default-theme stargate
+```
+
+## Test (without reboot)
+
+```bash
+sudo plymouthd
+sudo plymouth --show-splash
+sleep 5
+sudo plymouth --quit
 ```
 
 ## Licence and Attribution
