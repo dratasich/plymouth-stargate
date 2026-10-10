@@ -1,3 +1,10 @@
+# Copyright (c) 2016 Marco Buzzanca  (original monoarch plymouth theme)
+# Copyright (c) 2025 Denise         (stargate-sg1 adaptation)
+# MIT License — see LICENSE file for full text
+#
+# Based on: https://github.com/monoarch/monoarch-plymouth
+# Original Plymouth script example: /usr/share/plymouth/themes/script/script.script
+
 # Stargate SG-1 Plymouth Theme
 # Black background, centered logo, spinning chevron animation
 
