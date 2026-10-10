@@ -1,4 +1,4 @@
-# plymouth-stargate-sg1
+# plymouth-stargate
 
 Stargate SG-1 Plymouth boot splash theme.
 
@@ -6,7 +6,7 @@ Stargate SG-1 Plymouth boot splash theme.
 
 - Style: technical drawing and/or futuristic comic style.
 - 7 chevrons light one after another. Last chevron is at the top.
-  The order is according to [stargatewiki: dialing computer](https://en.stargatewiki.noip.me/images/1/19/Dialing_computer_%28Unending%29.jpg)
+  The order is according to [stargatewiki: dialing computer](https://en.stargatewiki.noip.me/images/1/19/Dialing_computer_%28Unending%29.jpg).
 
 ## Structure
 
@@ -28,23 +28,23 @@ images/
 
 ```bash
 sudo cp -r . /usr/share/plymouth/themes/stargate
-sudo plymouth-set-default-theme stargate
+sudo plymouth-set-default-theme -R stargate
 ```
+
+See also [archwiki about plymouth](https://wiki.archlinux.org/title/Plymouth).
 
 ## Test (without reboot)
 
 ```bash
 sudo plymouthd
-sudo plymouth --show-splash
-sleep 5
-sudo plymouth --quit
+sudo plymouth --show-splash; sleep 12; sudo plymouth --quit
 ```
 
-## Licence and Attribution
+## License and Attribution
 
 Images are derived from
 
-- Alphathon /'æɫfə.θɒn/ (talk)Glyphs derived from Stargate-color.svg by RufusLynx, which in turn is derived from Stargate-color.png by Stefan-Xp, CC BY-SA 3.0 <http://creativecommons.org/licenses/by-sa/3.0/>, via Wikimedia Commons.
+- Alphathon /'æɫfə.θɒn/ (talk)Glyphs derived from Stargate-color.svg by RufusLynx, which in turn is derived from Stargate-color.png by Stefan-Xp, [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/), via Wikimedia Commons.
   - [Stargate.svg](https://commons.wikimedia.org/wiki/File:Stargate.svg)
 
 and shared under the same license [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/).
