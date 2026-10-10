@@ -7,11 +7,21 @@ Stargate SG-1 Plymouth boot splash theme.
 - Style: technical drawing and/or futuristic comic style.
 - 7 chevrons light one after another. Last chevron is at the top.
 
-- [plymouth-themes](https://github.com/adi1090x/plymouth-themes) - nicely animated
+## Structure
 
-Idea from:
+```
+stargate.plymouth          # theme descriptor
+stargate.script            # animation logic
+images/
+  logo.png                 # Stargate SG-1 logo
+  spinner-0.png .. 11.png  # 12-frame chevron spinner
+  box.png, lock.png, entry.png, bullet.png  # dialog assets
+```
 
-- <https://www.gnome-look.org/p/1009450/>
+## References
+
+- [plymouth-themes](https://github.com/adi1090x/plymouth-themes)
+- [gnome-look original](https://www.gnome-look.org/p/1009450/)
 
 Design:
 
