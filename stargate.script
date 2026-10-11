@@ -17,29 +17,17 @@ frameTicks = 50;
 frameCount = 9;
 
 # --- Stargate ---
+# start from unlit, will activate then pulsate
 stargate.image = Image("stargate_0.png");
 stargate.x = Window.GetWidth() / 2 - stargate.image.GetWidth() / 2;
-stargate.y = Window.GetHeight() * 0.35 - stargate.image.GetHeight() / 2;
+stargate.y = Window.GetHeight() / 2 - stargate.image.GetHeight() / 2;
 
-if (Plymouth.GetMode() == "boot")
-{
-    stargate.tick = 0;
-    stargate.frame = 0;
-    stargate.done = 0;
+stargate.tick = 0;
+stargate.frame = 0;
+stargate.done = 0;
 
-    stargate.sprite = Sprite(stargate.image);
-    stargate.sprite.SetPosition(stargate.x, stargate.y, 0);
-}
-else
-{
-    # Lock screen: start from unlit, will activate then pulsate
-    stargate.tick = 0;
-    stargate.frame = 0;
-    stargate.done = 0;
-
-    stargate.sprite = Sprite(stargate.image);
-    stargate.sprite.SetPosition(stargate.x, stargate.y, 0);
-}
+stargate.sprite = Sprite(stargate.image);
+stargate.sprite.SetPosition(stargate.x, stargate.y, 0);
 
 # --- Refresh ---
 fun refresh()
@@ -139,17 +127,19 @@ fun dialog_setup()
     lock.image = Image("lock.png");
     entry.image = Image("entry.png");
 
-    lock.sprite = Sprite(lock.image);
-    lock.x = Window.GetX() + Window.GetWidth() / 2 - (lock.image.GetWidth() + entry.image.GetWidth()) / 2;
-    lock.y = Window.GetY() + Window.GetHeight() / 2 - lock.image.GetHeight() / 2;
-    lock.z = 10000;
-    lock.sprite.SetPosition(lock.x, lock.y, lock.z);
-
+    # some space from bottom of the screen, and centered horizontally
+    entry.x = Window.GetWidth() / 2 - entry.image.GetWidth() / 2;
+    entry.y = Window.GetY() - 4 * entry.image.GetHeight();
+    entry.z = 10000;
     entry.sprite = Sprite(entry.image);
-    entry.x = lock.x + lock.image.GetWidth();
-    entry.y = Window.GetY() + Window.GetHeight() / 2 - entry.image.GetHeight() / 2;
-    entry.z = lock.z + 1;
     entry.sprite.SetPosition(entry.x, entry.y, entry.z);
+
+    # left of the entry, centered vertically with respect to the entry
+    lock.x = entry.x - lock.image.GetWidth();
+    lock.y = entry.y + entry.image.GetHeight() / 2 - lock.image.GetHeight() / 2;
+    lock.z = entry.z + 1;
+    lock.sprite = Sprite(lock.image);
+    lock.sprite.SetPosition(lock.x, lock.y, lock.z);
 
     global.dialog.lock = lock;
     global.dialog.entry = entry;

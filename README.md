@@ -21,8 +21,10 @@ images/
 
 ## Colors
 
-- See `images-src/stargate.svg`
-- box 1px `808080ff`
+See `images-src/stargate.svg`:
+
+- grey `808080ff`
+- orange `ff6600ff`
 
 ## Install
 
@@ -57,6 +59,7 @@ and distributed under the [MIT License](https://opensource.org/licenses/MIT).
 ## References
 
 - [plymouth-themes](https://github.com/adi1090x/plymouth-themes)
+  ([previews here](https://xdaforums.com/t/bootanimations-collection.3721978/#post-74901989))
 - [gnome-look original](https://www.gnome-look.org/p/1009450/)
 
 Design:
