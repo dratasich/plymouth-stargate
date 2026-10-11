@@ -1,8 +1,8 @@
 [Plymouth Theme]
-Name=Stargate SG-1
+Name=Stargate
 Description=Stargate SG-1 themed boot splash with 7-chevron dialing animation
 ModuleName=script
 
 [script]
-ImageDir=/home/denise/repos/plymouth-stargate-sg1/images
-ScriptFile=/home/denise/repos/plymouth-stargate-sg1/stargate.script
+ImageDir=/usr/share/plymouth/themes/stargate/images
+ScriptFile=/usr/share/plymouth/themes/stargate/stargate.script

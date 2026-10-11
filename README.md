@@ -35,6 +35,8 @@ See also [archwiki about plymouth](https://wiki.archlinux.org/title/Plymouth).
 
 ## Test (without reboot)
 
+Runs the previously installed theme for 12 seconds, then quits.
+
 ```bash
 sudo plymouthd
 sudo plymouth --show-splash; sleep 12; sudo plymouth --quit
@@ -49,8 +51,8 @@ Images are derived from
 
 and shared under the same license [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/).
 
-The plymouth theme is based on [monoarch]()
-by Marco Buzzanca distributed under [MIT License](https://opensource.org/licenses/MIT).
+The plymouth theme is based on monoarch by Marco Buzzanca
+and distributed under the [MIT License](https://opensource.org/licenses/MIT).
 
 ## References
 
