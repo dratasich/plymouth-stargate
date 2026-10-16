@@ -13,10 +13,8 @@ Stargate SG-1 Plymouth boot splash theme.
 ```
 stargate.plymouth          # theme descriptor
 stargate.script            # animation logic
-images/
-  logo.png                 # Stargate SG-1 logo
-  spinner-0.png .. 11.png  # 12-frame chevron spinner
-  box.png, lock.png, entry.png, bullet.png  # dialog assets
+images/                    # assets used by the theme
+images-src/                # source files of the images
 ```
 
 ## Colors
