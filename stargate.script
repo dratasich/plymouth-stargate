@@ -11,96 +11,99 @@
 Window.SetBackgroundTopColor(0.0, 0.0, 0.0);
 Window.SetBackgroundBottomColor(0.0, 0.0, 0.0);
 
-# Timing: refresh runs at ~50Hz (1 tick = 20ms)
-# 1 second per frame = 50 ticks per frame
-frameTicks = 25;
-frameCount = 9;
-
 # --- Stargate ---
-# start from unlit, will activate then pulsate
-stargate.image = Image("stargate_0.png");
+#
+# reset state machine
+#
+# - dialing: = going through frames 0-8, then state 1
+# - on: water ripple effect (event horizon)
+# - shutdown: no chevrons lit, no water ripple effect, stargate fades out
+# - off: no chevrons lit, no water ripple effect, stargate almost not visible
+
+# clock / step counter
+# Timing: refresh runs at ~50Hz (1 tick = 20ms)
+stargate.tick = 0;
+stargate.opacity = 1.0;
+
+# the mode defines the first state
+if (Plymouth.GetMode() == "boot")
+{
+  stargate.state = "dialing";
+  stargate.frame = 0;
+  stargate.ticksPerFrame = 25;
+}
+else #if (Plymouth.GetMode() == "shutdown")
+{
+  stargate.state = "on";
+  stargate.frame = 8;
+  stargate.ticksPerFrame = 5;
+}
+
+# stargate first image and position: centered on screen
+stargate.image = Image("stargate_" + stargate.frame + ".png");
+stargate.sprite = Sprite(stargate.image);
 stargate.x = Window.GetWidth() / 2 - stargate.image.GetWidth() / 2;
 stargate.y = Window.GetHeight() / 2 - stargate.image.GetHeight() / 2;
-
-stargate.tick = 0;
-stargate.frame = 0;
-stargate.done = 0;
-
-stargate.sprite = Sprite(stargate.image);
 stargate.sprite.SetPosition(stargate.x, stargate.y, 0);
 
 # --- Refresh ---
 fun refresh()
 {
+    stargate.tick++;
+
+    # next state logic
+    # depending on boot or shutdown the state machine goes forward or backward
     if (Plymouth.GetMode() == "boot")
     {
-        if (status == "normal")
-        {
-            if (!stargate.done)
-            {
-                stargate.tick++;
-                if (stargate.tick >= frameTicks)
-                {
-                    stargate.tick = 0;
-                    stargate.frame++;
-                    if (stargate.frame >= frameCount)
-                    {
-                        stargate.done = 1;
-                        stargate.opacityAngle = 0;
-                    }
-                    else
-                        stargate.sprite.SetImage(Image("stargate_" + stargate.frame + ".png"));
-                }
-            }
-            else
-            {
-                # Pulsate endlessly after activation
-                stargate.opacityAngle += ((2 * 3.14) / 50) * 0.5;
-                minOpacity = 0.3;
-                opacity = (Math.Cos(stargate.opacityAngle) + 1) / 2;
-                opacity *= 1 - minOpacity;
-                opacity += minOpacity;
-                stargate.sprite.SetOpacity(opacity);
-            }
-        }
-        else
-        {
-            stargate.sprite.SetOpacity(0);
-        }
+        if (stargate.state == "dialing" && stargate.frame >= 8)
+            stargate.state = "on";
+            # once on, the stargate will stay on until shutdown is requested
     }
-    else
+    else #if (Plymouth.GetMode() == "shutdown")
     {
-        # Lock screen
-        if (status == "normal")
-        {
-            if (!stargate.done)
-            {
-                stargate.tick++;
-                if (stargate.tick >= frameTicks)
-                {
-                    stargate.tick = 0;
-                    stargate.frame++;
-                    if (stargate.frame >= frameCount)
-                        stargate.done = 1;
-                    else
-                        stargate.sprite.SetImage(Image("stargate_" + stargate.frame + ".png"));
-                }
-            }
-            else
-            {
-                # Pulsate endlessly on last frame
-                stargate.opacityAngle += ((2 * 3.14) / 50) * 0.5;
-                minOpacity = 0.3;
-                opacity = (Math.Cos(stargate.opacityAngle) + 1) / 2;
-                opacity *= 1 - minOpacity;
-                opacity += minOpacity;
-                stargate.sprite.SetOpacity(opacity);
-            }
-        }
-        else
-        {
-            stargate.sprite.SetOpacity(0);
-        }
+        # shutdown
+        if (stargate.state == "on" && stargate.frame >= 15)
+            stargate.state = "shutdown";
+        else if (stargate.state == "shutdown" && stargate.opacity <= 0.2)
+            stargate.state = "off";
+    }
+
+    # output logic
+    if (stargate.state == "dialing")
+    {
+        # increase frame from 0 to 8, then stay at 8 until state changes to "on"
+        stargate.sprite.SetImage(Image("stargate_" + stargate.frame + ".png"));
+        stargate.ticksPerFrame = 25;
+    }
+    if (stargate.state == "on")
+    {
+        # water ripple cycle (event horizon)
+        stargate.sprite.SetImage(Image("stargate_" + stargate.frame + ".png"));
+        stargate.ticksPerFrame = 5;
+    }
+    if (stargate.state == "shutdown")
+    {
+        # off image
+        stargate.sprite.SetImage(Image("stargate_0.png"));
+        # fade out
+        stargate.sprite.SetOpacity(stargate.opacity);
+        stargate.opacity -= 0.01;
+        stargate.ticksPerFrame = 10;
+    }
+    if (stargate.state == "off")
+    {
+        # no change
+    }
+
+    # next frame
+    if (stargate.tick >= stargate.ticksPerFrame)
+    {
+        stargate.tick = 0;
+        stargate.frame++;
+
+        # rollover event horizon frame
+        if (stargate.frame >= 19)
+          stargate.frame = 8;
     }
 }
 
@@ -108,12 +111,11 @@ Plymouth.SetRefreshFunction(refresh);
 
 # --- Dialog (password / disk encryption) ---
 status = "normal";
+global.dialog = 0;
 
 fun display_normal_callback()
 {
     global.status = "normal";
-    # After password entered: show stargate_1.png
-    stargate.sprite.SetImage(Image("stargate_1.png"));
     stargate.sprite.SetOpacity(1);
     if (global.dialog)
         dialog_opacity(0);
@@ -200,6 +202,7 @@ message_sprite_y = 10;
 
 fun display_message_callback(text)
 {
+    local.my_image;
     my_image = Image.Text(text, 1, 1, 1);
     message_sprites[message_sprite_count] = Sprite(my_image);
     message_sprites[message_sprite_count].SetPosition(10, message_sprite_y, 10000);

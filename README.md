@@ -40,21 +40,35 @@ See also [archwiki about plymouth](https://wiki.archlinux.org/title/Plymouth).
 Runs the previously installed theme for 12 seconds, then quits.
 
 ```bash
-sudo plymouthd
-sudo plymouth --show-splash; sleep 12; sudo plymouth --quit
+su -s
+plymouthd; plymouth --show-splash; sleep 12; plymouth --quit
 ```
 
 ## License and Attribution
 
-Images are derived from
+Distributed under the [GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.html).
 
-- Alphathon /'æɫfə.θɒn/ (talk)Glyphs derived from Stargate-color.svg by RufusLynx, which in turn is derived from Stargate-color.png by Stefan-Xp, [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/), via Wikimedia Commons.
+The combined theme is GPL-3.0 because it incorporates GPL-3.0 assets
+(see `LICENSE` for the full text).
+
+### Image credits
+
+- Stargate glyphs derived from Stargate-color.svg by RufusLynx, which
+  in turn is derived from Stargate-color.png by Stefan-Xp,
+  via Wikimedia Commons (Alphathon/'æɫfə.θɒn/).
   - [Stargate.svg](https://commons.wikimedia.org/wiki/File:Stargate.svg)
+  - Original license: [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/)
+  - These assets remain under CC BY-SA 3.0 per their original terms.
+- A subset of the PNGs in Aditya Shakya's
+  [motion plymouth theme](https://github.com/adi1090x/plymouth-themes/tree/master/pack_3/motion).
+  Re-sized and re-colored.
+  - Original license: [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html)
 
-and shared under the same license [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/).
+### Code credits
 
-The plymouth theme is based on monoarch by Marco Buzzanca
-and distributed under the [MIT License](https://opensource.org/licenses/MIT).
+- Animation script based on `monoarch` by Marco Buzzanca,
+  originally [MIT](https://opensource.org/licenses/MIT),
+  re-licensed to GPL-3.0 as part of this combined work.
 
 ## References
 
