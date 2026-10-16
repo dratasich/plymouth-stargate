@@ -13,7 +13,7 @@ Window.SetBackgroundBottomColor(0.0, 0.0, 0.0);
 
 # Timing: refresh runs at ~50Hz (1 tick = 20ms)
 # 1 second per frame = 50 ticks per frame
-frameTicks = 50;
+frameTicks = 25;
 frameCount = 9;
 
 # --- Stargate ---
