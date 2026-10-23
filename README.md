@@ -2,6 +2,8 @@
 
 Stargate SG-1 Plymouth boot splash theme.
 
+![demo](./demo.gif)
+
 ## Design Goals
 
 - Style: technical drawing and/or futuristic comic style.
