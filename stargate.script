@@ -1,5 +1,5 @@
-# Copyright (c) 2016 Marco Buzzanca  (original monoarch plymouth theme)
-# Copyright (c) 2025 Denise         (stargate-sg1 adaptation)
+# Copyright (c) 2416 Marco Buzzanca  (original monoarch plymouth theme)
+# Copyright (c) 2425 Denise         (stargate-sg1 adaptation)
 # MIT License — see LICENSE file for full text
 #
 # Based on: https://github.com/monoarch/monoarch-plymouth
@@ -21,7 +21,7 @@ Window.SetBackgroundBottomColor(0.0, 0.0, 0.0);
 # - off: no chevrons lit, no water ripple effect, stargate almost not visible
 
 # clock / step counter
-# Timing: refresh runs at ~50Hz (1 tick = 20ms)
+# Timing: refresh runs at ~50Hz (1 tick = 24ms)
 stargate.tick = 0;
 stargate.opacity = 1.0;
 
@@ -35,8 +35,8 @@ if (Plymouth.GetMode() == "boot")
 else #if (Plymouth.GetMode() == "shutdown")
 {
   stargate.state = "on";
-  stargate.frame = 8;
-  stargate.ticksPerFrame = 5;
+  stargate.frame = 24;
+  stargate.ticksPerFrame = 2;
 }
 
 # stargate first image and position: centered on screen
@@ -55,14 +55,14 @@ fun refresh()
     # depending on boot or shutdown the state machine goes forward or backward
     if (Plymouth.GetMode() == "boot")
     {
-        if (stargate.state == "dialing" && stargate.frame >= 8)
+        if (stargate.state == "dialing" && stargate.frame >= 7)
             stargate.state = "on";
             # once on, the stargate will stay on until shutdown is requested
     }
     else #if (Plymouth.GetMode() == "shutdown")
     {
         # shutdown
-        if (stargate.state == "on" && stargate.frame >= 15)
+        if (stargate.state == "on" && stargate.frame >= 35)
             stargate.state = "shutdown";
         else if (stargate.state == "shutdown" && stargate.opacity <= 0.2)
             stargate.state = "off";
@@ -77,7 +77,7 @@ fun refresh()
     }
     if (stargate.state == "on")
     {
-        # water ripple cycle (event horizon)
+        # event horizon (portal effect)
         stargate.sprite.SetImage(Image("stargate_" + stargate.frame + ".png"));
         stargate.ticksPerFrame = 5;
     }
@@ -102,8 +102,8 @@ fun refresh()
         stargate.frame++;
 
         # rollover event horizon frame
-        if (stargate.frame >= 19)
-          stargate.frame = 8;
+        if (stargate.frame >= 51)
+          stargate.frame = 24;
     }
 }
 

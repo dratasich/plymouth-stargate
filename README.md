@@ -27,8 +27,9 @@ See `images-src/stargate.svg`:
 ## Install
 
 ```bash
-sudo cp -r . /usr/share/plymouth/themes/stargate
-sudo plymouth-set-default-theme -R stargate
+sudo -s
+cp -r . /usr/share/plymouth/themes/stargate
+plymouth-set-default-theme -R stargate
 ```
 
 See also [archwiki about plymouth](https://wiki.archlinux.org/title/Plymouth).
@@ -38,7 +39,7 @@ See also [archwiki about plymouth](https://wiki.archlinux.org/title/Plymouth).
 Runs the previously installed theme for 12 seconds, then quits.
 
 ```bash
-su -s
+sudo -s
 plymouthd; plymouth --show-splash; sleep 12; plymouth --quit
 ```
 
@@ -57,10 +58,16 @@ The combined theme is GPL-3.0 because it incorporates GPL-3.0 assets
   - [Stargate.svg](https://commons.wikimedia.org/wiki/File:Stargate.svg)
   - Original license: [CC BY-SA 3.0](http://creativecommons.org/licenses/by-sa/3.0/)
   - These assets remain under CC BY-SA 3.0 per their original terms.
-- A subset of the PNGs in Aditya Shakya's
-  [motion plymouth theme](https://github.com/adi1090x/plymouth-themes/tree/master/pack_3/motion).
-  Re-sized and re-colored.
-  - Original license: [GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.html)
+- Images are extracted and colorized from the video:
+  [portal-gateway-sci-fi-neon-star-83179](https://pixabay.com/videos/portal-gateway-sci-fi-neon-star-83179/) by [sridxb](https://pixabay.com/users/sridxb-18354673/) via [Pixabay](https://pixabay.com/) licensed under [Pixabay's Content License](https://pixabay.com/service/terms/)
+
+  ```bash
+  ffmpeg -i images-src/videos/pixabay_stargate-portal_17801-285184194.mp4 -an \
+    -vf "select='between(n\,60\,119)*not(mod(n\,3))',crop=1024:1024:448:28" \
+    -fps_mode passthrough -start_number 0 images-src/ripple/ripple-%03d.png
+  ffmpeg -i portal/portal-%03d.png -vf scale=820:820 -fps_mode passthrough \
+    -start_number 0 portal-scaled/portal-%03d.png
+  ```
 
 ### Code credits
 
